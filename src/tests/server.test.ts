@@ -9,3 +9,13 @@ describe('Error handling', (): void => {
         expect(response.body).toStrictEqual({ message: 'Not found' });
     });
 });
+
+describe('OPTIONS request', (): void => {
+    it('should handle OPTIONS request properly', async (): Promise<any> => {
+        const response = await request(app).options('/');
+
+        expect(response.headers).toHaveProperty('access-control-allow-methods', 'GET');
+        expect(response.statusCode).toEqual(200);
+        expect(response.body).toStrictEqual({});
+    });
+});

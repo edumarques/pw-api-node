@@ -12,6 +12,7 @@ const app = express();
 dotenv.config();
 
 /** Log the request (if not running tests) */
+/* istanbul ignore next */
 if (process.env.NODE_ENV !== 'test') {
     app.use((req: Request, res: Response, next: NextFunction): void => {
         res.on('finish', (): void => {
