@@ -14,12 +14,8 @@ dotenv.config();
 /** Log the request (if not running tests) */
 if (process.env.NODE_ENV !== 'test') {
     app.use((req: Request, res: Response, next: NextFunction): void => {
-        /** Log the request */
-        logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
-
-        res.on('finish', () => {
-            /** Log the response */
-            logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
+        res.on('finish', (): void => {
+            logging.info(NAMESPACE, `[${req.socket.remoteAddress}] ${req.method} ${req.originalUrl} -> ${res.statusCode}`);
         })
 
         next();
