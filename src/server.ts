@@ -1,31 +1,37 @@
-import http from 'http';
 import express, { NextFunction, Request, Response } from 'express';
 import logging from './config/logging';
 import config from './config/config';
 import statusRoutes from './routes/statusRoutes';
+import constants from './constants';
+import dotenv from 'dotenv';
 
-const NAMESPACE = 'Server';
+const NAMESPACE = 'server';
+
 const app = express();
 
-/** Log the request */
-app.use((req: Request, res: Response, next: NextFunction) => {
-    /** Log the request */
-    logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
+dotenv.config();
 
-    res.on('finish', () => {
-        /** Log the response */
-        logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
-    })
+/** Log the request (if not running tests) */
+if (process.env.NODE_ENV !== 'test') {
+    app.use((req: Request, res: Response, next: NextFunction): void => {
+        /** Log the request */
+        logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
-    next();
-});
+        res.on('finish', () => {
+            /** Log the response */
+            logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
+        })
+
+        next();
+    });
+}
 
 /** Parse the body of the request */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 /** Rules of the API */
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response, next: NextFunction): Response | void => {
     res.header('Access-Control-Allow-Origin', `${config.authorizedOrigin}`);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
@@ -39,19 +45,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 /** Routes */
 
-const baseUrl = '/pw/api/v1';
-
-app.use(`${baseUrl}/status`, statusRoutes);
+app.use(constants.apiBaseUrl, statusRoutes);
 
 /** Error handling */
-app.use((req: Request, res: Response, next: NextFunction) => {
-    const error = new Error('Not found');
-
+app.use((req: Request, res: Response, next: NextFunction): void => {
     res.status(404).json({
-        message: error.message
+        message: 'Not found'
     });
 });
 
-const httpServer = http.createServer(app);
-
-httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`));
+module.exports = app;
