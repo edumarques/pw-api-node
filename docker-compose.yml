@@ -1,0 +1,10 @@
+version: '3'
+services:
+  node:
+    build: .
+    command: npm run dev
+    volumes:
+      - .:/usr/pw-api
+      - ./node_modules:/usr/pw-api/node_modules
+    ports:
+      - '${FORWARD_APP_PORT:-3000}:${APP_PORT:-3000}'
