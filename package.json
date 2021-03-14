@@ -7,7 +7,8 @@
     "dev": "nodemon src/index.ts",
     "build": "rm -rf build/ && tsc",
     "test": "jest --config jest.config.json --passWithNoTests --detectOpenHandles",
-    "test:coverage": "jest --config jest.config.json --coverage"
+    "test:coverage:dev": "jest --config jest.config.json --coverage",
+    "test:coverage:ci": "jest --config jest.config.json --ci --coverage && codecov"
   },
   "repository": {
     "type": "git",
