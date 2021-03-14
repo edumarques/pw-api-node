@@ -6,7 +6,7 @@ describe('Error handling', (): void => {
         const response = await request(app).get('/route/not/registered');
 
         expect(response.statusCode).toEqual(404);
-        expect(response.body).toStrictEqual({ message: 'Not found' });
+        expect(response.body).toStrictEqual({ status: 'Error', message: 'Not found' });
     });
 });
 

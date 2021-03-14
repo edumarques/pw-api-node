@@ -1,5 +1,4 @@
-export default {
-    // routes
-    apiBaseUrl: '/api/v1',
-    statusUrl: '/status',
-};
+// Routes
+export const apiBaseUrl = '/api/v1';
+export const statusUrl = '/status';
+export const portfolioUrl = '/portfolio';

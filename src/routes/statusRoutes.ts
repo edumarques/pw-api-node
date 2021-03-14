@@ -1,10 +1,9 @@
 import express from 'express';
 import statusController from '../controllers/statusController';
-import constants from '../constants';
+import { statusUrl } from '../constants';
 
 const router = express.Router();
-const baseUrl = constants.statusUrl;
 
-router.get(`${baseUrl}/`, statusController.checkAppStatus);
+router.get(`${statusUrl}/`, statusController.checkAppStatus);
 
 export = router;

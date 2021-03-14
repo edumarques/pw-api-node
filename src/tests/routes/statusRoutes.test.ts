@@ -1,8 +1,8 @@
-import constants from "../../constants";
+import { apiBaseUrl, statusUrl } from "../../constants";
 
 const request = require('supertest');
 const app = require('../../server');
-const baseUrl = constants.apiBaseUrl + constants.statusUrl;
+const baseUrl = apiBaseUrl + statusUrl;
 
 describe('Status Endpoints', (): void => {
     it('should check app status', async (): Promise<any> => {
